@@ -11,7 +11,7 @@ import { reviewController } from './server/controllers/reviewController';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const initialPort = Number(process.env.PORT) || 3000;
 
   app.use(express.json());
   app.use(cookieParser());
@@ -180,9 +180,23 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[AbiMart Backend] Gaming Accessories Capstone server listening at http://0.0.0.0:${PORT}`);
-  });
+  function bindServer(portToTry: number) {
+    const server = app.listen(portToTry, '0.0.0.0', () => {
+      console.log(`[AbiMart Backend] Gaming Accessories Capstone server listening at http://localhost:${portToTry}`);
+      console.log(`[AbiMart Backend] Alternative local URL: http://127.0.0.1:${portToTry}`);
+    });
+
+    server.on('error', (err: any) => {
+      if (err.code === 'EADDRINUSE') {
+        console.warn(`[AbiMart Backend] Port ${portToTry} is occupied. Attempting next available port: ${portToTry + 1}...`);
+        bindServer(portToTry + 1);
+      } else {
+        console.error('[AbiMart Backend] Server error:', err);
+      }
+    });
+  }
+
+  bindServer(initialPort);
 }
 
 startServer().catch(err => {

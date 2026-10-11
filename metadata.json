@@ -1,0 +1,6 @@
+{
+  "name": "AbiMart - User Authentication & Database System",
+  "description": "AbiMart Capstone Project: User Authentication (Login, Registration, Sessions), Role Management (Buyer, Seller, Admin), and Database Schema Inspector.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
